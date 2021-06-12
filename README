@@ -1,0 +1,66 @@
+cheziunix, reut.barak2
+Chezi Imany (311520647), Reut Barak (307830463)
+EX: 2
+
+FILES:
+README
+uthreads.cpp - implemantation of the uthreads.h headers file.
+makefile - generates the libuthreads.a library.
+
+
+REMARKS:
+This is an implementation of the seconds exercise of the course OS.
+The execersice include two assingments: creatibg a user level thread library and questions about threads.
+
+ANSWERS:
+
+1.	Describe one general use of user-level threads and explain why user-level threads are a reasonable choice for your
+example. (2.5 pts)
+
+answer:
+User level threads give a process a way to manage its own functions and actions such that the process can chose the
+number of function that run simultaneously (by shared schedule for example). That way it lets the schedule to be based
+on the application and to its’ needs (priority, time managing operations etc.). For example, assume we have a ground
+control station that has to communicate with several endpoints at the same time, user – level threads will enable us
+to communicate with them simultaneously, and prioritize the endpoints by however it chooses.
+
+
+2.	Google’s Chrome browser creates a new process for each tab. What are the advantages and disadvantages of creating
+the new process (instead of creating kernel-level thread)? (2.5 pts)
+
+answer:
+advantages: every process can be suspended without affecting other processes, so we can close one tab without affecting
+the others. In addition, for different process, a separate memory is being allocated, hence the chance for collision in
+a critical section is being reduced.
+Disadvantages: Higher overhead due to operation that require kernel trap (like update of the PBC in each context switch).
+Require the operation system to communicate with other tabs or with IO installations.
+
+3.	Interrupts and signals: a. Open an application (for example, “Shotwell” on one of the CS computers). Use the “ps -A”
+command to extract the application’s pid (process ID). b. Open a shell and type “kill pid” c. Explain which interrupts
+and signals are involved during the command execution, what triggered them and who should handle them. In your answer
+refer to the keyboard, OS, shell and the application you just killed (2.5 pts)
+answer:
+The shell application is a waiting process which await for interrupts from the keyboard. Assuming we open the “Shotwell”
+application from the Shell in the CS computer, the typing operations S-h-o-t-w-e-l-l-\n are interrupts from the
+keyboard (IO interrupts), that the OS return to the shell which prints it to the screen. The shell waits for “\n”.
+After reaching the end of the string, the OS is allocating memory for the new process “Shotwell”, set the counter and
+the stack pointer of the process, and inserting the process to the scheduler. When a signal (like VTALRM) will be throw
+by the scheduler to make a context switch between processes, the OS will handle it and set the registers of the CPU to
+the counter and stack pointers of the new process.
+Pressing “ps -A” will again activate interrupts from the keyboard to the shell and create a command (a system call) that
+ask the OS for all the pid of the running processes.
+The “kill pid” command arose a SIGKILL that the OS handle by shut down the pid process (and move it out of the
+schedular).
+
+4.	What is the difference between ‘real’ and ‘virtual’ time? Give one example of using each (2.5 pts).
+answer:
+Real time is the time passing in the system, while virtual time (“running time”) is the time that a process will run if
+no interruptions or delays (such as IO delays) where occurred.
+Using virtual time can be done in a time sharing schedule, by allocating X milliseconds as a quantum per one process
+(and so every process get an equal time to run within the system).
+Using real time can be done in programs that need to be activated in touch with reality, for example, if one should
+interpret a live video on a stream, it received the video information in real time and need to extract interpretation
+back in time close to the moment of receiving the info. Using real timer will limit the time to do several calculating
+in order to create new ones with the new information and to send the interpreted information back to the stream.
+
+
