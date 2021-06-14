@@ -388,7 +388,7 @@ int uthread_mutex_unlock()
         unblock_signals();
         return -1;
     }
-    if (mutex != running_trd)
+    if (mutex >= 0 && mutex != running_trd)
     {
         print_lib_err("only the locking thread can unlock the mutex.");
         return -1;
